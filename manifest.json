@@ -1,8 +1,8 @@
 {
   "name": "Football Brother",
   "short_name": "FootBro",
-  "theme_color": "#2196f3",
-  "background_color": "#ef6c00",
+  "theme_color": "#EF6C00",
+  "background_color": "#EF6C00",
   "display": "standalone",
   "start_url": "/index.html",
   "icons": [{

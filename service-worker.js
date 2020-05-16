@@ -75,17 +75,12 @@ workbox.routing.registerRoute(
         cacheName: 'API'
     })
 );
-
-self.addEventListener('fetch', (event) => {
-    if (event.request.url.endsWith('.svg')) {
-        // Referencing workbox.strategies will now work as expected.
-        const cacheFirst = new workbox.strategies.CacheFirst();
-        event.respondWith(cacheFirst.handle({
-            request: event.request
-        }));
-    }
-});
-
+workbox.routing.registerRoute(
+    new RegExp('https://upload.wikimedia.org/'),
+    new workbox.strategies.CacheFirst({
+        cacheName: 'svg'
+    })
+);
 self.addEventListener('push', function (event) {
     if (event.data) {
         body = event.data.text();
