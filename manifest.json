@@ -4,7 +4,7 @@
   "theme_color": "#2196f3",
   "background_color": "#ef6c00",
   "display": "standalone",
-  "start_url": "/football/index.html",
+  "start_url": "/index.html",
   "icons": [{
     "src": "img/logo.png",
     "sizes": "512x512",
