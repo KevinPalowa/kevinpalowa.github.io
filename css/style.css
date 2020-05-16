@@ -1,0 +1,70 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
+
+.team {
+    width: 50%;
+}
+
+
+.brand-logo img {
+    width: 50px;
+}
+
+.club-logo {
+    width: 25px;
+    margin-right: 5px;
+}
+
+.club {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+#leagueName {
+    margin-left: 20px;
+}
+
+.material-icons {
+    cursor: pointer;
+}
+
+
+.scheduled {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.preloader-wrapper {
+    margin-left: 50%;
+}
+
+@media (max-width: 992px) {
+
+    tr th:nth-child(7),
+    tr td:nth-child(7),
+    tr th:nth-child(8),
+    tr td:nth-child(8),
+    tr th:nth-child(9),
+    tr td:nth-child(9),
+    tr th:nth-child(10),
+    tr td:nth-child(10) {
+
+        display: none;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+}
