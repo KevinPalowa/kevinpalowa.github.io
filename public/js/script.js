@@ -7,7 +7,6 @@ if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
         requestServiceWorkers();
         requestPermission();
-
     });
 } else {
     console.log("ServiceWorker belum didukung browser ini.");
@@ -15,7 +14,7 @@ if ("serviceWorker" in navigator) {
 
 const requestServiceWorkers = () => {
     return navigator.serviceWorker
-        .register("/service-worker.js")
+        .register("/sw.js")
         .then(function () {
             console.log("Pendaftaran ServiceWorker berhasil");
         })

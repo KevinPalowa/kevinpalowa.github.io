@@ -75,12 +75,29 @@ workbox.routing.registerRoute(
         cacheName: 'API'
     })
 );
-workbox.routing.registerRoute(
-    new RegExp('https://upload.wikimedia.org/'),
-    new workbox.strategies.CacheFirst({
-        cacheName: 'svg'
-    })
-);
+// workbox.routing.registerRoute(
+//     new RegExp('https://upload.wikimedia.org/'),
+//     new workbox.strategies.CacheFirst({
+//         cacheName: 'svg'
+//     })
+// );
+
+
+// This will trigger the importScripts() for workbox.strategies and its dependencies:
+workbox.loadModule('workbox-strategies');
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.url.endsWith('.svg')) {
+        console.log(`$request dari ${event.request.url}`)
+        // Referencing workbox.strategies will now work as expected.
+        const cacheFirst = new workbox.strategies.CacheFirst({
+            cacheName: 'logo'
+        });
+        event.respondWith(cacheFirst.handle({
+            request: event.request
+        }));
+    }
+});
 self.addEventListener('push', function (event) {
     if (event.data) {
         body = event.data.text();
