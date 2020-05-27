@@ -1,11 +1,11 @@
-import regeneratorRuntime from "regenerator/runtime";
-import assert from "assert";
-import {Promise} from "es6-promise";
+import regeneratorRuntime from 'regenerator/runtime';
+import assert from 'assert';
+import {Promise} from 'es6-promise';
 
 self.Promise = Promise;
 
 describe('idb interface', () => {
-  beforeEach(done => idb.delete('tmp-db').then(done));
+  beforeEach((done) => idb.delete('tmp-db').then(done));
 
   it('exists on window', () => {
     assert('idb' in self);
@@ -19,7 +19,7 @@ describe('idb interface', () => {
   // yeah yeah, I know, I need to write better tests
   it('stuff', async () => {
     // Open the database
-    let db = await idb.open('tmp-db', 1, upgradeDb => {
+    const db = await idb.open('tmp-db', 1, (upgradeDb) => {
       switch (upgradeDb.oldVersion) {
         case 0:
           upgradeDb.createObjectStore('key-val').put('world', 'hello');
@@ -28,8 +28,8 @@ describe('idb interface', () => {
 
     // Add some things to the list
     let tx = db.transaction('key-val', 'readwrite');
-    let store = tx.objectStore('key-val');
-    
+    const store = tx.objectStore('key-val');
+
     store.put(await store.get('hello'), 'foo');
     await tx.complete;
 
@@ -41,22 +41,22 @@ describe('idb interface', () => {
 
   it('lets me itterate over a cursor', async () => {
     // Open the database
-    let db = await idb.open('tmp-db', 1, upgradeDb => {
+    const db = await idb.open('tmp-db', 1, (upgradeDb) => {
       switch (upgradeDb.oldVersion) {
         case 0:
           const store = upgradeDb.createObjectStore('list', {keyPath: ''});
-          store.put("a");
-          store.put("b");
-          store.put("c");
-          store.put("d");
-          store.put("e");
+          store.put('a');
+          store.put('b');
+          store.put('c');
+          store.put('d');
+          store.put('e');
       }
     });
 
     const tx = db.transaction('list');
     const values = [];
 
-    tx.objectStore('list').iterateCursor(cursor => {
+    tx.objectStore('list').iterateCursor((cursor) => {
       if (!cursor) return;
       values.push(cursor.value);
       cursor.continue();
@@ -68,7 +68,7 @@ describe('idb interface', () => {
   });
 
   it('rejects rather than throws', async () => {
-    const db = await idb.open('tmp-db', 1, upgradeDb => {
+    const db = await idb.open('tmp-db', 1, (upgradeDb) => {
       upgradeDb.createObjectStore('key-val');
     });
 
@@ -80,14 +80,14 @@ describe('idb interface', () => {
     await tx.complete;
 
     try {
-      getPromise = store.get('hello').catch(_ => rejected = true);
-    } catch(e) {
+      getPromise = store.get('hello').catch((_) => rejected = true);
+    } catch (e) {
       threw = true;
     }
 
     await getPromise;
 
-    assert(!threw, "Did not throw");
-    assert(rejected, "Rejected");
+    assert(!threw, 'Did not throw');
+    assert(rejected, 'Rejected');
   });
 });

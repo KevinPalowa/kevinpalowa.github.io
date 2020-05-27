@@ -18,8 +18,8 @@
   }
 
   function promisifyRequestCall(obj, method, args) {
-    var request;
-    var p = new Promise(function(resolve, reject) {
+    let request;
+    const p = new Promise(function(resolve, reject) {
       request = obj[method].apply(obj, args);
       promisifyRequest(request).then(resolve, reject);
     });
@@ -29,7 +29,7 @@
   }
 
   function promisifyCursorRequestCall(obj, method, args) {
-    var p = promisifyRequestCall(obj, method, args);
+    const p = promisifyRequestCall(obj, method, args);
     return p.then(function(value) {
       if (!value) return;
       return new Cursor(value, p.request);
@@ -44,7 +44,7 @@
         },
         set: function(val) {
           this[targetProp][prop] = val;
-        }
+        },
       });
     });
   }
@@ -84,7 +84,7 @@
     'name',
     'keyPath',
     'multiEntry',
-    'unique'
+    'unique',
   ]);
 
   proxyRequestMethods(Index, '_index', IDBIndex, [
@@ -92,12 +92,12 @@
     'getKey',
     'getAll',
     'getAllKeys',
-    'count'
+    'count',
   ]);
 
   proxyCursorRequestMethods(Index, '_index', IDBIndex, [
     'openCursor',
-    'openKeyCursor'
+    'openKeyCursor',
   ]);
 
   function Cursor(cursor, request) {
@@ -109,20 +109,20 @@
     'direction',
     'key',
     'primaryKey',
-    'value'
+    'value',
   ]);
 
   proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
     'update',
-    'delete'
+    'delete',
   ]);
 
   // proxy 'next' methods
   ['advance', 'continue', 'continuePrimaryKey'].forEach(function(methodName) {
     if (!(methodName in IDBCursor.prototype)) return;
     Cursor.prototype[methodName] = function() {
-      var cursor = this;
-      var args = arguments;
+      const cursor = this;
+      const args = arguments;
       return Promise.resolve().then(function() {
         cursor._cursor[methodName].apply(cursor._cursor, args);
         return promisifyRequest(cursor._request).then(function(value) {
@@ -149,7 +149,7 @@
     'name',
     'keyPath',
     'indexNames',
-    'autoIncrement'
+    'autoIncrement',
   ]);
 
   proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
@@ -161,16 +161,16 @@
     'getAll',
     'getKey',
     'getAllKeys',
-    'count'
+    'count',
   ]);
 
   proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
     'openCursor',
-    'openKeyCursor'
+    'openKeyCursor',
   ]);
 
   proxyMethods(ObjectStore, '_store', IDBObjectStore, [
-    'deleteIndex'
+    'deleteIndex',
   ]);
 
   function Transaction(idbTransaction) {
@@ -194,11 +194,11 @@
 
   proxyProperties(Transaction, '_tx', [
     'objectStoreNames',
-    'mode'
+    'mode',
   ]);
 
   proxyMethods(Transaction, '_tx', IDBTransaction, [
-    'abort'
+    'abort',
   ]);
 
   function UpgradeDB(db, oldVersion, transaction) {
@@ -214,12 +214,12 @@
   proxyProperties(UpgradeDB, '_db', [
     'name',
     'version',
-    'objectStoreNames'
+    'objectStoreNames',
   ]);
 
   proxyMethods(UpgradeDB, '_db', IDBDatabase, [
     'deleteObjectStore',
-    'close'
+    'close',
   ]);
 
   function DB(db) {
@@ -233,11 +233,11 @@
   proxyProperties(DB, '_db', [
     'name',
     'version',
-    'objectStoreNames'
+    'objectStoreNames',
   ]);
 
   proxyMethods(DB, '_db', IDBDatabase, [
-    'close'
+    'close',
   ]);
 
   // Add cursor iterators
@@ -248,10 +248,10 @@
       if (!(funcName in Constructor.prototype)) return;
 
       Constructor.prototype[funcName.replace('open', 'iterate')] = function() {
-        var args = toArray(arguments);
-        var callback = args[args.length - 1];
-        var nativeObject = this._store || this._index;
-        var request = nativeObject[funcName].apply(nativeObject, args.slice(0, -1));
+        const args = toArray(arguments);
+        const callback = args[args.length - 1];
+        const nativeObject = this._store || this._index;
+        const request = nativeObject[funcName].apply(nativeObject, args.slice(0, -1));
         request.onsuccess = function() {
           callback(request.result);
         };
@@ -263,8 +263,8 @@
   [Index, ObjectStore].forEach(function(Constructor) {
     if (Constructor.prototype.getAll) return;
     Constructor.prototype.getAll = function(query, count) {
-      var instance = this;
-      var items = [];
+      const instance = this;
+      const items = [];
 
       return new Promise(function(resolve) {
         instance.iterateCursor(query, function(cursor) {
@@ -284,10 +284,10 @@
     };
   });
 
-  var exp = {
+  const exp = {
     open: function(name, version, upgradeCallback) {
-      var p = promisifyRequestCall(indexedDB, 'open', [name, version]);
-      var request = p.request;
+      const p = promisifyRequestCall(indexedDB, 'open', [name, version]);
+      const request = p.request;
 
       if (request) {
         request.onupgradeneeded = function(event) {
@@ -303,14 +303,13 @@
     },
     delete: function(name) {
       return promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
-    }
+    },
   };
 
   if (typeof module !== 'undefined') {
     module.exports = exp;
     module.exports.default = module.exports;
-  }
-  else {
+  } else {
     self.idb = exp;
   }
 }());
